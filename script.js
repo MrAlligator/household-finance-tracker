@@ -2,9 +2,6 @@ class FinanceTracker {
     constructor() {
         this.transactions = [];
         this.chart = null;
-        this.sheetSyncEnabled = localStorage.getItem('sheetSyncEnabled') === 'true';
-        this.FORM_ID = "1DBPIzvydeN59-9705Xk7ldboHLO9tFB1U8FsxHER6MU";
-        this.FORM_URL = `https://docs.google.com/forms/d/${this.FORM_ID}/formResponse`;
         this.init();
     }
 
@@ -40,8 +37,6 @@ class FinanceTracker {
         document.getElementById('exportBtn').addEventListener('click', () => this.exportCSV());
         document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importFile').click());
         document.getElementById('importFile').addEventListener('change', (e) => this.importCSV(e));
-        document.getElementById('fetchSheetsBtn').addEventListener('click', () => this.fetchFromSheets());
-        document.getElementById('syncSheetBtn').addEventListener('click', () => this.toggleSheetSync());
         document.getElementById('clearBtn').addEventListener('click', () => this.clearAll());
         document.getElementById('clearCacheBtn').addEventListener('click', () => this.clearCache());
         document.getElementById('clearCacheBtn').addEventListener('click', () => this.clearCache());
@@ -94,11 +89,6 @@ class FinanceTracker {
 
         this.transactions.unshift(transaction);
         this.saveTransactions();
-        
-        if (this.sheetSyncEnabled) {
-            this.syncToGoogleSheets(transaction);
-        }
-        
         this.closeModal();
         this.render();
     }
@@ -411,121 +401,6 @@ class FinanceTracker {
         reader.readAsText(file);
     }
 
-    fetchFromSheets() {
-        const SHEET_ID = "1yon-k-XQ5F9G0FvaWnk3eBSzSkgNjK7a_lHnhP99PM0";
-        const SHEET_GID = 0; // Default sheet
-        const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${SHEET_GID}`;
-
-        // Use CORS proxy untuk fetch
-        const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
-        
-        alert('🔄 Fetching data dari Google Sheets...');
-
-        fetch(CSV_URL)
-            .then(response => response.text())
-            .then(csv => {
-                const lines = csv.trim().split('\n');
-                const header = lines[0];
-                const imported = [];
-
-                // Skip header, parse data
-                for (let i = 1; i < lines.length; i++) {
-                    if (!lines[i].trim()) continue;
-                    
-                    const values = lines[i].split(',').map(v => v.replace(/^"|"$/g, '').trim());
-                    if (values.length >= 5) {
-                        imported.push({
-                            id: Date.now() + i,
-                            date: values[0],
-                            description: values[1],
-                            category: values[2],
-                            type: values[3],
-                            amount: parseInt(values[4]),
-                            timestamp: new Date().toISOString()
-                        });
-                    }
-                }
-
-                if (imported.length === 0) {
-                    alert('⚠️ Data dari Sheets kosong atau format tidak sesuai');
-                    return;
-                }
-
-                // Merge dengan existing data (Sheets data di depan)
-                this.transactions = [...imported, ...this.transactions];
-                this.saveTransactions();
-                this.populateMonthFilter();
-                this.render();
-
-                alert(`✅ Berhasil fetch ${imported.length} transaksi dari Sheets!`);
-            })
-            .catch(error => {
-                console.error('Error fetching from Sheets:', error);
-                alert('❌ Gagal fetch dari Sheets. Pastikan:\n1. Sheet sudah di-share (public)\n2. Format sesuai: Tanggal, Keterangan, Kategori, Tipe, Jumlah');
-            });
-    }
-
-    clearAll() {
-        if (confirm('Hapus SEMUA transaksi? Ini tidak bisa dibatalkan!')) {
-            this.transactions = [];
-            this.saveTransactions();
-            this.render();
-        }
-    }
-
-    clearCache() {
-        if (confirm('Clear semua cache & data? Ini tidak bisa dibatalkan!')) {
-            localStorage.clear();
-            sessionStorage.clear();
-            
-            if ('caches' in window) {
-                caches.keys().then(names => {
-                    names.forEach(name => caches.delete(name));
-                });
-            }
-            
-            alert('✅ Cache cleared! Page akan reload...');
-            setTimeout(() => window.location.reload(), 500);
-        }
-    }
-
-    syncToGoogleSheets(transaction) {
-        const date = new Date(transaction.date);
-        const year = date.getFullYear();
-        const month = date.getMonth() + 1;
-        const day = date.getDate();
-        
-        const formData = new FormData();
-        
-        formData.append('entry.1833836517_year', year);
-        formData.append('entry.1833836517_month', month);
-        formData.append('entry.1833836517_day', day);
-        formData.append('entry.1404772862', transaction.description);
-        formData.append('entry.1750772740', transaction.amount);
-        formData.append('entry.365073415', transaction.category);
-        formData.append('entry.1873797266', transaction.type === 'expense' ? 'Pengeluaran' : 'Pemasukan');
-        
-        fetch(this.FORM_URL, {
-            method: 'POST',
-            body: formData,
-            mode: 'no-cors'
-        })
-        .then(() => {
-            console.log('✅ Data synced ke Google Sheets:', transaction.description);
-        })
-        .catch(error => {
-            console.warn('⚠️ Network error saat sync:', error);
-        });
-    }
-
-    toggleSheetSync() {
-        this.sheetSyncEnabled = !this.sheetSyncEnabled;
-        localStorage.setItem('sheetSyncEnabled', this.sheetSyncEnabled);
-        
-        const status = this.sheetSyncEnabled ? 'ON ✅' : 'OFF ⭕';
-        alert(`Google Sheets Sync: ${status}`);
-        this.render();
-    }
 
     render() {
         this.updateSummary();
