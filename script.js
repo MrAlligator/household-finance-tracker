@@ -3,8 +3,8 @@ class FinanceTracker {
         this.transactions = [];
         this.chart = null;
         this.sheetSyncEnabled = localStorage.getItem('sheetSyncEnabled') === 'true';
-        this.SHEET_ID = "1yon-k-XQ5F9G0FvaWnk3eBSzSkgNjK7a_lHnhP99PM0";
-        this.APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx7r4soJ5D6cdiThLK8RY7cZFDsypWV-aUiLbDaD7AY4MRUG8NPJMQBRIWD8yD5tG_3gQ/exec";
+        this.FORM_ID = "1DBPIzvydeN59-9705Xk7ldboHLO9tFB1U8FsxHER6MU";
+        this.FORM_URL = `https://docs.google.com/forms/d/${this.FORM_ID}/formResponse`;
         this.init();
     }
 
@@ -384,17 +384,28 @@ class FinanceTracker {
     }
 
     syncToGoogleSheets(transaction) {
-        fetch(this.APPS_SCRIPT_URL, {
+        const date = new Date(transaction.date);
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        
+        const formData = new FormData();
+        
+        formData.append('entry.1833836517_year', year);
+        formData.append('entry.1833836517_month', month);
+        formData.append('entry.1833836517_day', day);
+        formData.append('entry.1404772862', transaction.description);
+        formData.append('entry.1750772740', transaction.amount);
+        formData.append('entry.365073415', transaction.category);
+        formData.append('entry.1873797266', transaction.type === 'expense' ? 'Pengeluaran' : 'Pemasukan');
+        
+        fetch(this.FORM_URL, {
             method: 'POST',
-            body: JSON.stringify(transaction)
+            body: formData,
+            mode: 'no-cors'
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log('✅ Data synced ke Google Sheets:', transaction.description);
-            } else {
-                console.warn('⚠️ Sync error:', data.error);
-            }
+        .then(() => {
+            console.log('✅ Data synced ke Google Sheets:', transaction.description);
         })
         .catch(error => {
             console.warn('⚠️ Network error saat sync:', error);
