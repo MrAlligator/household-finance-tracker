@@ -41,6 +41,7 @@ class FinanceTracker {
         document.getElementById('syncSheetBtn').addEventListener('click', () => this.toggleSheetSync());
         document.getElementById('clearBtn').addEventListener('click', () => this.clearAll());
         document.getElementById('clearCacheBtn').addEventListener('click', () => this.clearCache());
+        document.getElementById('clearCacheBtn').addEventListener('click', () => this.clearCache());
 
         // Modal handlers
         document.getElementById('fabBtn').addEventListener('click', () => this.openModal());

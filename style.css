@@ -329,7 +329,27 @@ select:focus {
 .btn-danger:active {
     transform: scale(0.95);
 }
+.btn-danger-warn {
+    background-color: #fca5a5;
+    color: #7f1d1d;
+    padding: 12px 16px;
+    border: 2px solid #ef4444;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    touch-action: manipulation;
+}
 
+.btn-danger-warn:hover {
+    background-color: #f87171;
+    color: white;
+}
+
+.btn-danger-warn:active {
+    transform: scale(0.95);
+}
 /* Transactions Cards */
 .transactions-list {
     display: grid;
