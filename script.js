@@ -40,6 +40,7 @@ class FinanceTracker {
         document.getElementById('exportBtn').addEventListener('click', () => this.exportCSV());
         document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importFile').click());
         document.getElementById('importFile').addEventListener('change', (e) => this.importCSV(e));
+        document.getElementById('fetchSheetsBtn').addEventListener('click', () => this.fetchFromSheets());
         document.getElementById('syncSheetBtn').addEventListener('click', () => this.toggleSheetSync());
         document.getElementById('clearBtn').addEventListener('click', () => this.clearAll());
         document.getElementById('clearCacheBtn').addEventListener('click', () => this.clearCache());
@@ -408,6 +409,60 @@ class FinanceTracker {
             }
         };
         reader.readAsText(file);
+    }
+
+    fetchFromSheets() {
+        const SHEET_ID = "1yon-k-XQ5F9G0FvaWnk3eBSzSkgNjK7a_lHnhP99PM0";
+        const SHEET_GID = 0; // Default sheet
+        const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${SHEET_GID}`;
+
+        // Use CORS proxy untuk fetch
+        const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
+        
+        alert('🔄 Fetching data dari Google Sheets...');
+
+        fetch(CSV_URL)
+            .then(response => response.text())
+            .then(csv => {
+                const lines = csv.trim().split('\n');
+                const header = lines[0];
+                const imported = [];
+
+                // Skip header, parse data
+                for (let i = 1; i < lines.length; i++) {
+                    if (!lines[i].trim()) continue;
+                    
+                    const values = lines[i].split(',').map(v => v.replace(/^"|"$/g, '').trim());
+                    if (values.length >= 5) {
+                        imported.push({
+                            id: Date.now() + i,
+                            date: values[0],
+                            description: values[1],
+                            category: values[2],
+                            type: values[3],
+                            amount: parseInt(values[4]),
+                            timestamp: new Date().toISOString()
+                        });
+                    }
+                }
+
+                if (imported.length === 0) {
+                    alert('⚠️ Data dari Sheets kosong atau format tidak sesuai');
+                    return;
+                }
+
+                // Merge dengan existing data (Sheets data di depan)
+                this.transactions = [...imported, ...this.transactions];
+                this.saveTransactions();
+                this.populateMonthFilter();
+                this.render();
+
+                alert(`✅ Berhasil fetch ${imported.length} transaksi dari Sheets!`);
+            })
+            .catch(error => {
+                console.error('Error fetching from Sheets:', error);
+                alert('❌ Gagal fetch dari Sheets. Pastikan:\n1. Sheet sudah di-share (public)\n2. Format sesuai: Tanggal, Keterangan, Kategori, Tipe, Jumlah');
+            });
     }
 
     clearAll() {
