@@ -55,11 +55,15 @@
                         <option value="">Semua Bulan</option>
                     </select>
                     <button class="btn-secondary" id="exportBtn">📥 Backup CSV</button>
+                    <button class="btn-secondary" id="importBtn">📤 Import CSV</button>
                     <button class="btn-secondary" id="syncSheetBtn">☁️ Sync Sheets</button>
                     <button class="btn-danger-warn" id="clearBtn">🗑️ Hapus Data</button>
                     <button class="btn-danger-warn" id="clearCacheBtn">🔄 Bersihkan Total</button>
                 </div>
             </section>
+
+            <!-- Hidden File Input -->
+            <input type="file" id="importFile" accept=".csv" style="display: none;">
 
             <!-- Transactions List (Card Based) -->
             <section class="transactions-section">

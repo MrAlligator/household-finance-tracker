@@ -38,6 +38,8 @@ class FinanceTracker {
         document.getElementById('searchInput').addEventListener('input', () => this.render());
         document.getElementById('monthFilter').addEventListener('change', () => this.render());
         document.getElementById('exportBtn').addEventListener('click', () => this.exportCSV());
+        document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importFile').click());
+        document.getElementById('importFile').addEventListener('change', (e) => this.importCSV(e));
         document.getElementById('syncSheetBtn').addEventListener('click', () => this.toggleSheetSync());
         document.getElementById('clearBtn').addEventListener('click', () => this.clearAll());
         document.getElementById('clearCacheBtn').addEventListener('click', () => this.clearCache());
@@ -357,6 +359,55 @@ class FinanceTracker {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+    }
+
+    importCSV(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const csv = e.target.result;
+                const lines = csv.trim().split('\n');
+                const header = lines[0].split(',');
+                const imported = [];
+
+                for (let i = 1; i < lines.length; i++) {
+                    const values = lines[i].split(',').map(v => v.replace(/^"|"$/g, ''));
+                    if (values.length === 5) {
+                        imported.push({
+                            id: Date.now() + i,
+                            date: values[0],
+                            description: values[1],
+                            category: values[2],
+                            type: values[3],
+                            amount: parseInt(values[4]),
+                            timestamp: new Date().toISOString()
+                        });
+                    }
+                }
+
+                if (imported.length === 0) {
+                    alert('CSV tidak valid atau kosong');
+                    return;
+                }
+
+                // Merge dengan data existing
+                this.transactions = [...imported, ...this.transactions];
+                this.saveTransactions();
+                this.populateMonthFilter();
+                this.render();
+
+                alert(`✅ Berhasil import ${imported.length} transaksi!`);
+                
+                // Reset file input
+                document.getElementById('importFile').value = '';
+            } catch (error) {
+                alert('❌ Error parsing CSV: ' + error.message);
+            }
+        };
+        reader.readAsText(file);
     }
 
     clearAll() {
