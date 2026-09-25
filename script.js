@@ -4,7 +4,7 @@ class FinanceTracker {
         this.chart = null;
         this.sheetSyncEnabled = localStorage.getItem('sheetSyncEnabled') === 'true';
         this.SHEET_ID = "1yon-k-XQ5F9G0FvaWnk3eBSzSkgNjK7a_lHnhP99PM0";
-        this.APPS_SCRIPT_URL = "https://script.google.com/macros/d/AKfycby4f0kP0z-T09_aI9yx2qY9fyZnCMdCYRRpYFswI0OD0HlDXZdzMjS7aTXaNYBmPIx-jg/userweb";
+        this.APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx7r4soJ5D6cdiThLK8RY7cZFDsypWV-aUiLbDaD7AY4MRUG8NPJMQBRIWD8yD5tG_3gQ/exec";
         this.init();
     }
 
