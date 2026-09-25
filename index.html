@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Keuangan">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="description" content="Aplikasi pencatat keuangan rumah tangga. Kelola pengeluaran dan pemasukan dengan mudah, sync ke Google Sheets.">
+    <title>Pencatat Keuangan Rumah Tangga</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%232563eb' width='192' height='192'/><text x='96' y='120' font-size='120' font-weight='bold' fill='white' text-anchor='middle'>💰</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💰 Pencatat Keuangan Rumah Tangga</h1>
+        </header>
+
+        <main>
+            <!-- Input Section -->
+            <section class="input-section">
+                <h2>Tambah Transaksi</h2>
+                <form id="transactionForm">
+                    <div class="form-group">
+                        <label for="description">Keterangan</label>
+                        <input type="text" id="description" placeholder="Contoh: Belanja Sayur" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="amount">Jumlah</label>
+                            <input type="number" id="amount" placeholder="0" min="0" step="1000" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="category">Kategori</label>
+                            <select id="category" required>
+                                <option value="">Pilih Kategori</option>
+                                <option value="Makanan">🍽️ Makanan</option>
+                                <option value="Transportasi">🚗 Transportasi</option>
+                                <option value="Utilitas">💡 Utilitas</option>
+                                <option value="Hiburan">🎬 Hiburan</option>
+                                <option value="Kesehatan">🏥 Kesehatan</option>
+                                <option value="Pendidikan">📚 Pendidikan</option>
+                                <option value="Belanja">🛍️ Belanja</option>
+                                <option value="Gaji">💵 Gaji/Pemasukan</option>
+                                <option value="Lainnya">📌 Lainnya</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="type">Tipe</label>
+                            <select id="type" required>
+                                <option value="expense">Pengeluaran</option>
+                                <option value="income">Pemasukan</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="date">Tanggal</label>
+                        <input type="date" id="date" required>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Simpan Transaksi</button>
+                </form>
+            </section>
+
+            <!-- Summary Section -->
+            <section class="summary-section">
+                <h2>Ringkasan</h2>
+                <div class="summary-cards">
+                    <div class="card income">
+                        <div class="label">Pemasukan</div>
+                        <div class="amount" id="totalIncome">Rp 0</div>
+                    </div>
+                    <div class="card expense">
+                        <div class="label">Pengeluaran</div>
+                        <div class="amount" id="totalExpense">Rp 0</div>
+                    </div>
+                    <div class="card balance">
+                        <div class="label">Saldo</div>
+                        <div class="amount" id="totalBalance">Rp 0</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chart Section -->
+            <section class="chart-section">
+                <h2>Pengeluaran Per Kategori</h2>
+                <canvas id="categoryChart"></canvas>
+            </section>
+
+            <!-- Filter & Controls -->
+            <section class="controls-section">
+                <div class="controls">
+                    <input type="text" id="searchInput" placeholder="Cari transaksi...">
+                    <select id="monthFilter">
+                        <option value="">Semua Bulan</option>
+                    </select>
+                    <button class="btn-secondary" id="exportBtn">📥 Export CSV</button>
+                    <button class="btn-secondary" id="clearBtn">🗑️ Hapus Semua</button>
+                </div>
+            </section>
+
+            <!-- Transactions List -->
+            <section class="transactions-section">
+                <h2>Daftar Transaksi</h2>
+                <div class="transactions-container">
+                    <table id="transactionsTable">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Keterangan</th>
+                                <th>Kategori</th>
+                                <th>Tipe</th>
+                                <th>Jumlah</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionsList">
+                        </tbody>
+                    </table>
+                    <div id="emptyState" class="empty-state">
+                        <p>Belum ada transaksi. Mulai tambah transaksi baru.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>© 2026 Pencatat Keuangan Rumah Tangga | Data tersimpan di browser Anda</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

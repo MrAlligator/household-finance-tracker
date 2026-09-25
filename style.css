@@ -1,0 +1,544 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #2563eb;
+    --secondary-color: #7c3aed;
+    --success-color: #10b981;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+    --bg-light: #f9fafb;
+    --bg-white: #ffffff;
+    --text-dark: #1f2937;
+    --text-gray: #6b7280;
+    --border-color: #e5e7eb;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 20px 0;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+header h1 {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+}
+
+main {
+    display: grid;
+    gap: 30px;
+}
+
+section {
+    background: var(--bg-white);
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: var(--text-dark);
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 0.95rem;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Button Styles */
+.btn-primary,
+.btn-secondary {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    width: 100%;
+}
+
+.btn-primary:hover {
+    background-color: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-secondary {
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--border-color);
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    color: white;
+    padding: 6px 12px;
+    font-size: 0.875rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-danger:hover {
+    background-color: #dc2626;
+}
+
+/* Summary Cards */
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    text-align: center;
+}
+
+.card.income {
+    background: linear-gradient(135deg, var(--success-color), #059669);
+}
+
+.card.expense {
+    background: linear-gradient(135deg, var(--danger-color), #dc2626);
+}
+
+.card.balance {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+.card .label {
+    font-size: 0.95rem;
+    opacity: 0.9;
+    margin-bottom: 10px;
+}
+
+.card .amount {
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+/* Chart Section */
+.chart-section {
+    position: relative;
+    height: 300px;
+}
+
+canvas {
+    max-height: 300px;
+}
+
+/* Controls */
+.controls-section {
+    padding: 15px 25px;
+}
+
+.controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.controls input,
+.controls select {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.95rem;
+}
+
+/* Table Styles */
+.transactions-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+thead {
+    background-color: var(--bg-light);
+}
+
+th {
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-dark);
+    border-bottom: 2px solid var(--border-color);
+}
+
+td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+tr:hover {
+    background-color: var(--bg-light);
+}
+
+.type-expense {
+    color: var(--danger-color);
+    font-weight: 600;
+}
+
+.type-income {
+    color: var(--success-color);
+    font-weight: 600;
+}
+
+.amount-cell {
+    text-align: right;
+    font-weight: 600;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-gray);
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-gray);
+    border-top: 1px solid var(--border-color);
+    margin-top: 40px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    body {
+        font-size: 16px;
+    }
+
+    .container {
+        padding: 12px;
+    }
+
+    header {
+        margin-bottom: 25px;
+        padding: 15px 0;
+    }
+
+    header h1 {
+        font-size: 1.6rem;
+    }
+
+    main {
+        gap: 20px;
+    }
+
+    section {
+        padding: 20px;
+        border-radius: 8px;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+    }
+
+    .form-group {
+        margin-bottom: 12px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    label {
+        font-size: 0.9rem;
+        margin-bottom: 4px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select {
+        padding: 12px;
+        font-size: 16px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        padding: 14px 20px;
+        font-size: 0.95rem;
+        min-height: 48px;
+    }
+
+    .btn-primary {
+        width: 100%;
+    }
+
+    .summary-cards {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .card {
+        padding: 18px;
+    }
+
+    .card .amount {
+        font-size: 1.5rem;
+    }
+
+    .chart-section {
+        height: 250px;
+    }
+
+    .controls {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .controls input,
+    .controls select {
+        padding: 12px;
+        font-size: 16px;
+    }
+
+    .controls button {
+        min-height: 48px;
+    }
+
+    table {
+        font-size: 0.85rem;
+    }
+
+    th, td {
+        padding: 10px 6px;
+    }
+
+    .btn-danger {
+        padding: 8px 12px;
+        min-height: 40px;
+        font-size: 0.8rem;
+    }
+
+    .transactions-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        min-width: 500px;
+    }
+}
+
+/* Extra small devices (phones) */
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+
+    header h1 {
+        font-size: 1.4rem;
+    }
+
+    section {
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+
+    h2 {
+        font-size: 1.15rem;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select {
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 8px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        padding: 14px;
+        font-size: 0.9rem;
+        min-height: 48px;
+        border-radius: 8px;
+    }
+
+    .card .label {
+        font-size: 0.85rem;
+    }
+
+    .card .amount {
+        font-size: 1.35rem;
+    }
+
+    .chart-section {
+        height: 200px;
+    }
+
+    th, td {
+        padding: 8px 4px;
+    }
+
+    .empty-state {
+        padding: 30px 15px;
+    }
+
+    .empty-state p {
+        font-size: 0.95rem;
+    }
+
+    /* Stack layout untuk form yang lebih baik */
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    /* Easier to tap buttons */
+    button {
+        touch-action: manipulation;
+    }
+}
+
+/* Landscape mode on phones */
+@media (max-width: 768px) and (orientation: landscape) {
+    header h1 {
+        font-size: 1.3rem;
+    }
+
+    section {
+        padding: 15px;
+    }
+
+    .summary-cards {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .chart-section {
+        height: 200px;
+    }
+
+    .controls {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+    button,
+    input,
+    select {
+        min-height: 48px;
+        min-width: 48px;
+    }
+
+    button {
+        padding: 14px 16px;
+    }
+
+    a {
+        min-height: 48px;
+        min-width: 48px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select {
+        padding: 12px;
+        font-size: 16px;
+    }
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+section {
+    animation: slideIn 0.3s ease-out;
+}
