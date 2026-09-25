@@ -172,38 +172,67 @@ class FinanceTracker {
             this.chart.destroy();
         }
 
+        const colors = [
+            '#ef4444',
+            '#f97316',
+            '#eab308',
+            '#22c55e',
+            '#06b6d4',
+            '#3b82f6',
+            '#8b5cf6',
+            '#ec4899',
+            '#64748b'
+        ];
+
         this.chart = new Chart(ctx, {
             type: 'doughnut',
             data: {
                 labels,
                 datasets: [{
                     data,
-                    backgroundColor: [
-                        '#ef4444',
-                        '#f97316',
-                        '#eab308',
-                        '#22c55e',
-                        '#06b6d4',
-                        '#3b82f6',
-                        '#8b5cf6',
-                        '#ec4899',
-                        '#64748b'
-                    ],
+                    backgroundColor: colors.slice(0, labels.length),
                     borderColor: '#ffffff',
-                    borderWidth: 2
+                    borderWidth: 3,
+                    hoverOffset: 8
                 }]
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false,
+                maintainAspectRatio: true,
                 plugins: {
                     legend: {
-                        position: 'right',
+                        position: window.innerWidth < 768 ? 'bottom' : 'right',
                         labels: {
                             padding: 15,
-                            font: { size: 12 }
+                            font: { 
+                                size: window.innerWidth < 480 ? 11 : 12,
+                                weight: '500'
+                            },
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
+                    },
+                    tooltip: {
+                        padding: 12,
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        titleFont: { size: 13, weight: 'bold' },
+                        bodyFont: { size: 12 },
+                        displayColors: true,
+                        borderColor: '#ffffff',
+                        borderWidth: 1,
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.parsed;
+                                return ' Rp ' + value.toLocaleString('id-ID');
+                            }
                         }
                     }
+                },
+                animation: {
+                    animateRotate: true,
+                    animateScale: false,
+                    duration: 800,
+                    easing: 'easeInOutQuart'
                 }
             }
         });
