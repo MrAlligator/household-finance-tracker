@@ -2,6 +2,9 @@ class FinanceTracker {
     constructor() {
         this.transactions = [];
         this.chart = null;
+        this.sheetSyncEnabled = localStorage.getItem('sheetSyncEnabled') === 'true';
+        this.SHEET_ID = "1yon-k-XQ5F9G0FvaWnk3eBSzSkgNjK7a_lHnhP99PM0";
+        this.APPS_SCRIPT_URL = "https://script.google.com/macros/d/AKfycby4f0kP0z-T09_aI9yx2qY9fyZnCMdCYRRpYFswI0OD0HlDXZdzMjS7aTXaNYBmPIx-jg/userweb";
         this.init();
     }
 
@@ -35,6 +38,7 @@ class FinanceTracker {
         document.getElementById('searchInput').addEventListener('input', () => this.render());
         document.getElementById('monthFilter').addEventListener('change', () => this.render());
         document.getElementById('exportBtn').addEventListener('click', () => this.exportCSV());
+        document.getElementById('syncSheetBtn').addEventListener('click', () => this.toggleSheetSync());
         document.getElementById('clearBtn').addEventListener('click', () => this.clearAll());
         document.getElementById('clearCacheBtn').addEventListener('click', () => this.clearCache());
 
@@ -86,6 +90,11 @@ class FinanceTracker {
 
         this.transactions.unshift(transaction);
         this.saveTransactions();
+        
+        if (this.sheetSyncEnabled) {
+            this.syncToGoogleSheets(transaction);
+        }
+        
         this.closeModal();
         this.render();
     }
@@ -371,6 +380,33 @@ class FinanceTracker {
             alert('✅ Cache cleared! Page akan reload...');
             setTimeout(() => window.location.reload(), 500);
         }
+    }
+
+    syncToGoogleSheets(transaction) {
+        fetch(this.APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify(transaction)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('✅ Data synced ke Google Sheets:', transaction.description);
+            } else {
+                console.warn('⚠️ Sync error:', data.error);
+            }
+        })
+        .catch(error => {
+            console.warn('⚠️ Network error saat sync:', error);
+        });
+    }
+
+    toggleSheetSync() {
+        this.sheetSyncEnabled = !this.sheetSyncEnabled;
+        localStorage.setItem('sheetSyncEnabled', this.sheetSyncEnabled);
+        
+        const status = this.sheetSyncEnabled ? 'ON ✅' : 'OFF ⭕';
+        alert(`Google Sheets Sync: ${status}`);
+        this.render();
     }
 
     render() {
