@@ -39,9 +39,7 @@ class FinanceTracker {
         document.getElementById('importFile').addEventListener('change', (e) => this.importCSV(e));
         document.getElementById('clearBtn').addEventListener('click', () => this.clearAll());
         document.getElementById('clearCacheBtn').addEventListener('click', () => this.clearCache());
-        document.getElementById('clearCacheBtn').addEventListener('click', () => this.clearCache());
 
-        // Modal handlers
         document.getElementById('fabBtn').addEventListener('click', () => this.openModal());
         document.getElementById('closeModal').addEventListener('click', () => this.closeModal());
         document.getElementById('formModal').addEventListener('click', (e) => {
