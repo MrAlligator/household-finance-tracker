@@ -27,22 +27,50 @@ class FinanceTracker {
     }
 
     setupEventListeners() {
-        document.getElementById('transactionForm').addEventListener('submit', (e) => {
+        const form = document.getElementById('transactionForm');
+        const search = document.getElementById('searchInput');
+        const month = document.getElementById('monthFilter');
+        const exportBtn = document.getElementById('exportBtn');
+        const importBtn = document.getElementById('importBtn');
+        const importFile = document.getElementById('importFile');
+        const clearBtn = document.getElementById('clearBtn');
+        const clearCacheBtn = document.getElementById('clearCacheBtn');
+        const fabBtn = document.getElementById('fabBtn');
+        const closeModal = document.getElementById('closeModal');
+        const formModal = document.getElementById('formModal');
+
+        if (!form || !search || !month || !exportBtn || !importBtn || !importFile || !clearBtn || !clearCacheBtn || !fabBtn || !closeModal || !formModal) {
+            console.error('Missing DOM elements:', {
+                form: !!form,
+                search: !!search,
+                month: !!month,
+                exportBtn: !!exportBtn,
+                importBtn: !!importBtn,
+                importFile: !!importFile,
+                clearBtn: !!clearBtn,
+                clearCacheBtn: !!clearCacheBtn,
+                fabBtn: !!fabBtn,
+                closeModal: !!closeModal,
+                formModal: !!formModal
+            });
+            return;
+        }
+
+        form.addEventListener('submit', (e) => {
             e.preventDefault();
             this.addTransaction();
         });
 
-        document.getElementById('searchInput').addEventListener('input', () => this.render());
-        document.getElementById('monthFilter').addEventListener('change', () => this.render());
-        document.getElementById('exportBtn').addEventListener('click', () => this.exportCSV());
-        document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importFile').click());
-        document.getElementById('importFile').addEventListener('change', (e) => this.importCSV(e));
-        document.getElementById('clearBtn').addEventListener('click', () => this.clearAll());
-        document.getElementById('clearCacheBtn').addEventListener('click', () => this.clearCache());
-
-        document.getElementById('fabBtn').addEventListener('click', () => this.openModal());
-        document.getElementById('closeModal').addEventListener('click', () => this.closeModal());
-        document.getElementById('formModal').addEventListener('click', (e) => {
+        search.addEventListener('input', () => this.render());
+        month.addEventListener('change', () => this.render());
+        exportBtn.addEventListener('click', () => this.exportCSV());
+        importBtn.addEventListener('click', () => importFile.click());
+        importFile.addEventListener('change', (e) => this.importCSV(e));
+        clearBtn.addEventListener('click', () => this.clearAll());
+        clearCacheBtn.addEventListener('click', () => this.clearCache());
+        fabBtn.addEventListener('click', () => this.openModal());
+        closeModal.addEventListener('click', () => this.closeModal());
+        formModal.addEventListener('click', (e) => {
             if (e.target.id === 'formModal') this.closeModal();
         });
     }
