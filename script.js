@@ -36,6 +36,25 @@ class FinanceTracker {
         document.getElementById('monthFilter').addEventListener('change', () => this.render());
         document.getElementById('exportBtn').addEventListener('click', () => this.exportCSV());
         document.getElementById('clearBtn').addEventListener('click', () => this.clearAll());
+        document.getElementById('clearCacheBtn').addEventListener('click', () => this.clearCache());
+
+        // Modal handlers
+        document.getElementById('fabBtn').addEventListener('click', () => this.openModal());
+        document.getElementById('closeModal').addEventListener('click', () => this.closeModal());
+        document.getElementById('formModal').addEventListener('click', (e) => {
+            if (e.target.id === 'formModal') this.closeModal();
+        });
+    }
+
+    openModal() {
+        document.getElementById('formModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    closeModal() {
+        document.getElementById('formModal').classList.remove('active');
+        document.body.style.overflow = '';
+        this.resetForm();
     }
 
     setDefaultDate() {
@@ -67,7 +86,7 @@ class FinanceTracker {
 
         this.transactions.unshift(transaction);
         this.saveTransactions();
-        this.resetForm();
+        this.closeModal();
         this.render();
     }
 
@@ -239,38 +258,41 @@ class FinanceTracker {
     }
 
     renderTransactionsList() {
-        const tbody = document.getElementById('transactionsList');
-        const emptyState = document.getElementById('emptyState');
+        const listContainer = document.getElementById('transactionsList');
         const filtered = this.getFilteredTransactions();
 
-        tbody.innerHTML = '';
+        listContainer.innerHTML = '';
 
         if (filtered.length === 0) {
-            emptyState.style.display = 'block';
-            document.getElementById('transactionsTable').style.display = 'none';
+            listContainer.innerHTML = '<div class="empty-state"><p>Belum ada transaksi. Mulai tambah transaksi baru.</p></div>';
             return;
         }
 
-        emptyState.style.display = 'none';
-        document.getElementById('transactionsTable').style.display = 'table';
-
         filtered.forEach(t => {
-            const row = document.createElement('tr');
-            const typeClass = t.type === 'income' ? 'type-income' : 'type-expense';
+            const card = document.createElement('div');
+            card.className = `transaction-card ${t.type}`;
+            
             const typeLabel = t.type === 'income' ? 'Pemasukan' : 'Pengeluaran';
             const amountDisplay = t.type === 'income' ? '+' : '-';
-
-            row.innerHTML = `
-                <td>${this.formatDate(t.date)}</td>
-                <td>${t.description}</td>
-                <td>${t.category}</td>
-                <td class="${typeClass}">${typeLabel}</td>
-                <td class="amount-cell">${amountDisplay}${this.formatCurrency(t.amount)}</td>
-                <td>
-                    <button class="btn-danger" onclick="tracker.deleteTransaction(${t.id})">Hapus</button>
-                </td>
+            const formattedDate = this.formatDate(t.date);
+            
+            card.innerHTML = `
+                <div class="transaction-info">
+                    <div class="transaction-description">${t.description}</div>
+                    <div class="transaction-meta">
+                        <span>${formattedDate}</span>
+                        <span>${t.category}</span>
+                        <span>${typeLabel}</span>
+                    </div>
+                </div>
+                <div class="transaction-amount ${t.type}">
+                    <div class="transaction-amount-value">${amountDisplay}${this.formatCurrency(t.amount)}</div>
+                </div>
+                <div class="transaction-actions">
+                    <button class="transaction-delete" onclick="tracker.deleteTransaction(${t.id})">Hapus</button>
+                </div>
             `;
-            tbody.appendChild(row);
+            listContainer.appendChild(card);
         });
     }
 
@@ -332,6 +354,22 @@ class FinanceTracker {
             this.transactions = [];
             this.saveTransactions();
             this.render();
+        }
+    }
+
+    clearCache() {
+        if (confirm('Clear semua cache & data? Ini tidak bisa dibatalkan!')) {
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            if ('caches' in window) {
+                caches.keys().then(names => {
+                    names.forEach(name => caches.delete(name));
+                });
+            }
+            
+            alert('✅ Cache cleared! Page akan reload...');
+            setTimeout(() => window.location.reload(), 500);
         }
     }
 

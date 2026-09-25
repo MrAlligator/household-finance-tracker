@@ -20,9 +20,64 @@
         </header>
 
         <main>
-            <!-- Input Section -->
-            <section class="input-section">
-                <h2>Tambah Transaksi</h2>
+            <!-- Dashboard Section -->
+            <section class="dashboard-section">
+                <div class="balance-card">
+                    <div class="balance-label">Saldo Anda</div>
+                    <div class="balance-amount" id="totalBalance">Rp 0</div>
+                </div>
+
+                <div class="quick-stats">
+                    <div class="stat-card income">
+                        <div class="stat-label">Pemasukan</div>
+                        <div class="stat-amount" id="totalIncome">Rp 0</div>
+                    </div>
+                    <div class="stat-card expense">
+                        <div class="stat-label">Pengeluaran</div>
+                        <div class="stat-amount" id="totalExpense">Rp 0</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chart Section -->
+            <section class="chart-section">
+                <h2>💹 Pengeluaran Per Kategori</h2>
+                <div class="chart-wrapper">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </section>
+
+            <!-- Filter & Search -->
+            <section class="controls-section">
+                <div class="controls">
+                    <input type="text" id="searchInput" placeholder="Cari transaksi...">
+                    <select id="monthFilter">
+                        <option value="">Semua Bulan</option>
+                    </select>
+                    <button class="btn-secondary" id="exportBtn">📥 Export</button>
+                    <button class="btn-secondary" id="clearBtn">🗑️ Hapus Data</button>
+                    <button class="btn-secondary" id="clearCacheBtn">🔄 Clear Cache</button>
+                </div>
+            </section>
+
+            <!-- Transactions List (Card Based) -->
+            <section class="transactions-section">
+                <h2>Transaksi Terkini</h2>
+                <div class="transactions-list" id="transactionsList">
+                    <div class="empty-state">
+                        <p>Belum ada transaksi. Mulai tambah transaksi baru.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Modal Form -->
+        <div id="formModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Tambah Transaksi</h2>
+                    <button class="modal-close" id="closeModal">✕</button>
+                </div>
                 <form id="transactionForm">
                     <div class="form-group">
                         <label for="description">Keterangan</label>
@@ -67,71 +122,11 @@
 
                     <button type="submit" class="btn-primary">Simpan Transaksi</button>
                 </form>
-            </section>
+            </div>
+        </div>
 
-            <!-- Summary Section -->
-            <section class="summary-section">
-                <h2>Ringkasan</h2>
-                <div class="summary-cards">
-                    <div class="card income">
-                        <div class="label">Pemasukan</div>
-                        <div class="amount" id="totalIncome">Rp 0</div>
-                    </div>
-                    <div class="card expense">
-                        <div class="label">Pengeluaran</div>
-                        <div class="amount" id="totalExpense">Rp 0</div>
-                    </div>
-                    <div class="card balance">
-                        <div class="label">Saldo</div>
-                        <div class="amount" id="totalBalance">Rp 0</div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Chart Section -->
-            <section class="chart-section">
-                <h2>💹 Pengeluaran Per Kategori</h2>
-                <div class="chart-wrapper">
-                    <canvas id="categoryChart"></canvas>
-                </div>
-            </section>
-
-            <!-- Filter & Controls -->
-            <section class="controls-section">
-                <div class="controls">
-                    <input type="text" id="searchInput" placeholder="Cari transaksi...">
-                    <select id="monthFilter">
-                        <option value="">Semua Bulan</option>
-                    </select>
-                    <button class="btn-secondary" id="exportBtn">📥 Export CSV</button>
-                    <button class="btn-secondary" id="clearBtn">🗑️ Hapus Semua</button>
-                </div>
-            </section>
-
-            <!-- Transactions List -->
-            <section class="transactions-section">
-                <h2>Daftar Transaksi</h2>
-                <div class="transactions-container">
-                    <table id="transactionsTable">
-                        <thead>
-                            <tr>
-                                <th>Tanggal</th>
-                                <th>Keterangan</th>
-                                <th>Kategori</th>
-                                <th>Tipe</th>
-                                <th>Jumlah</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="transactionsList">
-                        </tbody>
-                    </table>
-                    <div id="emptyState" class="empty-state">
-                        <p>Belum ada transaksi. Mulai tambah transaksi baru.</p>
-                    </div>
-                </div>
-            </section>
-        </main>
+        <!-- Floating Action Button -->
+        <button class="fab" id="fabBtn" title="Tambah Transaksi">➕</button>
 
         <footer>
             <p>© 2026 Pencatat Keuangan Rumah Tangga | Data tersimpan di browser Anda</p>
