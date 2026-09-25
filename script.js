@@ -407,7 +407,10 @@ class FinanceTracker {
     }
 }
 
-const tracker = new FinanceTracker();
+document.addEventListener('DOMContentLoaded', () => {
+    const tracker = new FinanceTracker();
+    window.tracker = tracker;
+});
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
